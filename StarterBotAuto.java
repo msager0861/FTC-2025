@@ -440,40 +440,43 @@ public class StarterBotAuto extends OpMode
      * @return "true" if the motors are within tolerance of the target position for more than
      * holdSeconds. "false" otherwise.
      */
-    boolean drive(double speed, double distance, DistanceUnit distanceUnit, double holdSeconds) {
-        final double TOLERANCE_MM = 10;
-        /*
-         * In this function we use a DistanceUnits. This is a class that the FTC SDK implements
-         * which allows us to accept different input units depending on the user's preference.
-         * To use these, put both a double and a DistanceUnit as parameters in a function and then
-         * call distanceUnit.toMm(distance). This will return the number of mm that are equivalent
-         * to whatever distance in the unit specified. We are working in mm for this, so that's the
-         * unit we request from distanceUnit. But if we want to use inches in our function, we could
-         * use distanceUnit.toInches() instead!
-         */
-        double targetPosition = (distanceUnit.toMm(distance) * TICKS_PER_MM);
+    // Helper method to set motor power and sleep
+    public void drive(double forward, double strafe, double rotate, long milliseconds) {
+        double frontLeftPower = forward + strafe + rotate;
+        double frontRightPower = forward - strafe - rotate;
+        double backLeftPower = forward - straafe + rotate;
+        double backRightPower = forward + strafe - rotate;
 
-        leftDrive.setTargetPosition((int) targetPosition);
-        rightDrive.setTargetPosition((int) targetPosition);
+        // Ensure motor power is within acceptable range (-1 to 1)
+        frontLeftPower = com.qualcomm.robotcore.util.Range.clip(frontLeftPower, -1.0, 1.0);
+        frontRightPower = com.qualcomm.robotcore.util.Range.clip(frontRightPower, -1.0, 1.0);
+        backLeftPower = com.qualcomm.robotcore.util.Range.clip(backLeftPower, -1.0, 1.0);
+        backRightPower = com.qualcomm.robotcore.util.Range.clip(backRightPower, -1.0, 1.0);
 
-        leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        leftDrive.setPower(speed);
-        rightDrive.setPower(speed);
+        frontLeft.setPower(frontLeftPower);
+        frontRight.setPower(frontRightPower);
+        backLeft.setPower(backLeftPower);
+        backRight.setPower(backRightPower);
 
-        /*
-         * Here we check if we are within tolerance of our target position or not. We calculate the
-         * absolute error (distance from our setpoint regardless of if it is positive or negative)
-         * and compare that to our tolerance. If we have not reached our target yet, then we reset
-         * the driveTimer. Only after we reach the target can the timer count higher than our
-         * holdSeconds variable.
-         */
-        if(Math.abs(targetPosition - leftDrive.getCurrentPosition()) > (TOLERANCE_MM * TICKS_PER_MM)){
-            driveTimer.reset();
-        }
+        sleep(milliseconds); // Pause execution
+        stopDrive();
+    }
+    
+    // Helper method to stop all drive motors
+    public void stopDrive() {
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
+    }
 
-        return (driveTimer.seconds() > holdSeconds);
+    // Helper method to set motor run mode
+    public void setMotorMode(DcMotor.RunMode mode) {
+        frontLeft.setMode(mode);
+        frontRight.setMode(mode);
+        backLeft.setMode(mode);
+        backRight.setMode(mode);
     }
 
     /**
