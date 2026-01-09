@@ -62,9 +62,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  * main robot "loop," continuously checking for conditions that allow us to move to the next step.
  */
 
-@Autonomous(name="StarterBotAuto", group="StarterBot")
+@Autonomous(name="Auto16067Decode", group="Decode", preselectTeleOp="TeleOp16067Decode")
 //@Disabled
-public class StarterBotAuto extends OpMode
+public class Auto16067Decode extends OpMode
 {
 
     final double FEED_TIME = 0.20; //The feeder servos run this long when a shot is requested.
