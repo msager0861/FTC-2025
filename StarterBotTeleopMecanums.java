@@ -58,7 +58,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * we will also need to adjust the "PIDF" coefficients with some that are a better fit for our application.
  */
 
-@TeleOp(name = "TeleOp16067Decode", group = "Decodet")
+@TeleOp(name = "TeleOp16067Decode", group = "Decode")
 //@Disabled
 public class TeleOp16067Decode extends OpMode {
     final double FEED_TIME_SECONDS = 0.20; //The feeder servos run this long when a shot is requested.
